@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -49,7 +50,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     private OpenVPNService vpnService = new OpenVPNService();
     boolean vpnStart = false;
     private SharedPreference preference;
-
+    public static String username="null",password="null";
     private FragmentMainBinding binding;
 
     @Override
@@ -224,8 +225,12 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
                 config += line + "\n";
             }
 
+            SharedPreferences userPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+            username=userPreferences.getString("username","null");
+            password=userPreferences.getString("password","null");
+
             br.readLine();
-            OpenVpnApi.startVpn(getContext(), config, server.getOvpnUserName(), server.getOvpnUserPassword());
+            OpenVpnApi.startVpn(getContext(), config, username, password);
 
             // Update log
             binding.logTv.setText("Connecting...");

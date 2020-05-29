@@ -35,8 +35,8 @@ public class SharedPreference {
         mPrefEditor.putString(SERVER_COUNTRY, server.getCountry());
         mPrefEditor.putString(SERVER_FLAG, server.getFlagUrl());
         mPrefEditor.putString(SERVER_OVPN, server.getOvpn());
-        mPrefEditor.putString(SERVER_OVPN_USER, server.getOvpnUserName());
-        mPrefEditor.putString(SERVER_OVPN_PASSWORD, server.getOvpnUserPassword());
+        mPrefEditor.putString(SERVER_OVPN_USER, "fando");
+        mPrefEditor.putString(SERVER_OVPN_PASSWORD, "Palang66");
         mPrefEditor.commit();
     }
 
@@ -49,9 +49,7 @@ public class SharedPreference {
         Server server = new Server(
                 mPreference.getString(SERVER_COUNTRY,"Japan"),
                 mPreference.getString(SERVER_FLAG,getImgURL(R.drawable.japan)),
-                mPreference.getString(SERVER_OVPN,"japan.ovpn"),
-                mPreference.getString(SERVER_OVPN_USER,"vpn"),
-                mPreference.getString(SERVER_OVPN_PASSWORD,"vpn")
+                mPreference.getString(SERVER_OVPN,"fando.ovpn")
         );
 
         return server;
