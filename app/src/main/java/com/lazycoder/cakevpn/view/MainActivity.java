@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,6 +23,7 @@ import com.lazycoder.cakevpn.interfaces.ChangeServer;
 import com.lazycoder.cakevpn.interfaces.NavItemClickListener;
 import com.lazycoder.cakevpn.model.Server;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static com.lazycoder.cakevpn.Utils.getImgURL;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavItemClickListe
     private ServerListRVAdapter serverListRVAdapter;
     private DrawerLayout drawer;
     private ChangeServer changeServer;
+    public static int selectedvpn=0;
 
     public static final String TAG = "CakeVPN";
     @Override
@@ -107,13 +110,26 @@ public class MainActivity extends AppCompatActivity implements NavItemClickListe
      * Generate server array list
      */
     private ArrayList getServerList() {
-
         ArrayList<Server> servers = new ArrayList<>();
 
-        servers.add(new Server("GameMax Tsel",
-                getImgURL(R.drawable.sg_flag),
-                "fando.ovpn"
-        ));
+        String path = Environment.getExternalStorageDirectory().toString()+"/Config";
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.d("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++)
+        {
+            Log.d("Files", "FileName:" + files[i].getName());
+            servers.add(new Server(files[i].getName(),
+                    getImgURL(R.drawable.sg_flag),
+                    files[i].getName()
+            ));
+        }
+
+
+
+
+
 
 
         return servers;

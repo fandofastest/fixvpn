@@ -27,18 +27,6 @@ public class SharedPreference {
         this.context = context;
     }
 
-    /**
-     * Save server details
-     * @param server details of ovpn server
-     */
-    public void saveServer(Server server){
-        mPrefEditor.putString(SERVER_COUNTRY, server.getCountry());
-        mPrefEditor.putString(SERVER_FLAG, server.getFlagUrl());
-        mPrefEditor.putString(SERVER_OVPN, server.getOvpn());
-        mPrefEditor.putString(SERVER_OVPN_USER, "fando");
-        mPrefEditor.putString(SERVER_OVPN_PASSWORD, "Palang66");
-        mPrefEditor.commit();
-    }
 
     /**
      * Get server data from shared preference

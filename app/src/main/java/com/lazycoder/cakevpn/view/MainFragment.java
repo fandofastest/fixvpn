@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -30,9 +32,12 @@ import com.lazycoder.cakevpn.interfaces.ChangeServer;
 import com.lazycoder.cakevpn.model.Server;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 import de.blinkt.openvpn.OpenVpnApi;
 import de.blinkt.openvpn.core.OpenVPNService;
@@ -136,15 +141,20 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
         if (!vpnStart) {
             if (getInternetStatus()) {
 
-                // Checking permission for network monitor
-                Intent intent = VpnService.prepare(getContext());
 
-                if (intent != null) {
-                    startActivityForResult(intent, 1);
-                } else startVpn();//have already permission
 
-                // Update confection status
-                status("connecting");
+
+                showToast("you have no internet connection !!");
+//
+//                // Checking permission for network monitor
+//                Intent intent = VpnService.prepare(getContext());
+//
+//                if (intent != null) {
+//                    startActivityForResult(intent, 1);
+//                } else startVpn();//have already permission
+//
+//                // Update confection status
+//                status("connecting");
 
             } else {
 
@@ -213,7 +223,17 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     private void startVpn() {
         try {
             // .ovpn file
-            InputStream conf = getActivity().getAssets().open(server.getOvpn());
+
+
+            File fileJson = new File(Environment.getExternalStorageDirectory()+"/Config/", server.getOvpn());
+
+
+            InputStream conf = new FileInputStream(fileJson);
+//            String path = Environment.getExternalStorageDirectory().toString()+"/Config/"+server.getOvpn();
+//            InputStream conf = getActivity().getAssets().open(server.getOvpn());
+
+
+
             InputStreamReader isr = new InputStreamReader(conf);
             BufferedReader br = new BufferedReader(isr);
             String config = "";
@@ -224,6 +244,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
                 if (line == null) break;
                 config += line + "\n";
             }
+
+
 
             SharedPreferences userPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
             username=userPreferences.getString("username","null");
@@ -402,7 +424,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     @Override
     public void onStop() {
         if (server != null) {
-            preference.saveServer(server);
         }
 
         super.onStop();
